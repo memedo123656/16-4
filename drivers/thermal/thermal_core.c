@@ -329,8 +329,7 @@ static void thermal_zone_device_set_polling(struct workqueue_struct *queue,
 				 round_jiffies(msecs_to_jiffies(delay)));
 	else if (delay)
 		mod_delayed_work(system_freezable_power_efficient_wq,
-				 &tz->poll_queue,
-				 msecs_to_jiffies(delay));
+				 &tz->poll_queue, msecs_to_jiffies(delay));
 	else
 		cancel_delayed_work(&tz->poll_queue);
 }
@@ -1861,11 +1860,11 @@ static int screen_state_for_thermal_callback(struct notifier_block *nb, unsigned
 	switch (blank) {
 	case MSM_DRM_BLANK_POWERDOWN:
 		sm.screen_state = 0;
-		pr_warn("%s: MSM_DRM_BLANK_POWERDOWN\n", __func__);
+		pr_debug("%s: MSM_DRM_BLANK_POWERDOWN\n", __func__);
 		break;
 	case MSM_DRM_BLANK_UNBLANK:
 		sm.screen_state = 1;
-		pr_warn("%s: MSM_DRM_BLANK_UNBLANK\n", __func__);
+		pr_debug("%s: MSM_DRM_BLANK_UNBLANK\n", __func__);
 		break;
 	default:
 		break;
