@@ -27,7 +27,7 @@ extern bool susfs_is_current_ksu_domain(void);
 
 #ifdef CONFIG_KSU_SUSFS_ENABLE_LOG
 bool susfs_is_log_enabled __read_mostly = true;
-#define SUSFS_LOGI(fmt, ...) if (READ_ONCE(susfs_is_log_enabled)) pr_debug("susfs:[%u][%d][%s] " fmt, current_uid().val, current->pid, __func__, ##__VA_ARGS__)
+#define SUSFS_LOGI(fmt, ...) if (READ_ONCE(susfs_is_log_enabled)) pr_info("susfs:[%u][%d][%s] " fmt, current_uid().val, current->pid, __func__, ##__VA_ARGS__)
 #define SUSFS_LOGE(fmt, ...) if (READ_ONCE(susfs_is_log_enabled)) pr_err("susfs:[%u][%d][%s]" fmt, current_uid().val, current->pid, __func__, ##__VA_ARGS__)
 #else
 #define SUSFS_LOGI(fmt, ...) 
@@ -681,9 +681,9 @@ void susfs_enable_log(void __user **user_info) {
 	WRITE_ONCE(susfs_is_log_enabled, info.enabled);
 
 	if (info.enabled) {
-		pr_debug("susfs: enable logging to kernel");
+		pr_info("susfs: enable logging to kernel");
 	} else {
-		pr_debug("susfs: disable logging to kernel");
+		pr_info("susfs: disable logging to kernel");
 	}
 	info.err = 0;
 out_copy_to_user:
@@ -1448,7 +1448,7 @@ void susfs_start_sdcard_monitor_fn(void) {
 	if (IS_ERR(kthread_run(susfs_sdcard_monitor_fn, NULL, "susfs_sdcard_monitor"))) {
 		SUSFS_LOGE("failed to create thread susfs_sdcard_monitor\n");
 		SUSFS_LOGI("set susfs_is_sdcard_android_data_decrypted to true\n");
-		susfs_is_sdcard_android_data_decrypted = true;
+		WRITE_ONCE(susfs_is_sdcard_android_data_decrypted, true);
 	}
 }
 
